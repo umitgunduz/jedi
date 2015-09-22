@@ -10,7 +10,7 @@ import com.jedi.common.IOutput;
 
 /**
  *
- * @author EXT0104423
+ * @author umitgunduz
  */
 public interface IProcedureOutput extends IOutput{
     

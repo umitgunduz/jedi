@@ -9,7 +9,7 @@ import java.sql.Connection;
 
 /**
  *
- * @author EXT0104423
+ * @author umitgunduz
  */
 public interface IDbCommand {
     public Connection getConnection();

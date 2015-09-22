@@ -10,7 +10,7 @@ import oracle.jdbc.OracleConnection;
 
 /**
  *
- * @author EXT0104423
+ * @author umitgunduz
  * @param <In>
  * @param <Out>
  */

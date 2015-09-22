@@ -12,7 +12,7 @@ import java.lang.annotation.Target;
 
 /**
  *
- * @author EXT0104423
+ * @author umitgunduz
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE) //on class level

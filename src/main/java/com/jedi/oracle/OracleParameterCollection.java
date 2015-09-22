@@ -14,7 +14,7 @@ import java.util.ListIterator;
 
 /**
  *
- * @author EXT0104423
+ * @author umitgunduz
  */
 public final class OracleParameterCollection extends DbParameterCollection<OracleParameter> {
 

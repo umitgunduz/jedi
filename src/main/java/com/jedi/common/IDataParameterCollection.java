@@ -9,7 +9,7 @@ import java.util.List;
 
 /**
  *
- * @author EXT0104423
+ * @author umitgunduz
  */
 public interface IDataParameterCollection<T> extends List<T>{
     

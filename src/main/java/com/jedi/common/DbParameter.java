@@ -7,7 +7,7 @@ package com.jedi.common;
 
 /**
  *
- * @author EXT0104423
+ * @author umitgunduz
  */
 public abstract class DbParameter implements IDbDataParameter{
     

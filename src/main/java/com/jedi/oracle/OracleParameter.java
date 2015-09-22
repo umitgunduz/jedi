@@ -11,7 +11,7 @@ import oracle.jdbc.OracleTypes;
 
 /**
  *
- * @author EXT0104423
+ * @author umitgunduz
  */
 public final class OracleParameter extends DbParameter {
 

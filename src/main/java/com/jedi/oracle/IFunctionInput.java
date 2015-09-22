@@ -9,7 +9,7 @@ import com.jedi.common.IInput;
 
 /**
  *
- * @author EXT0104423
+ * @author umitgunduz
  */
 public interface IFunctionInput extends IInput{
     
