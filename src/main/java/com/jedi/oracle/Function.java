@@ -5,8 +5,9 @@
  */
 package com.jedi.oracle;
 
-import java.util.Map;
 import oracle.jdbc.OracleConnection;
+
+import java.util.Map;
 
 /**
  *

@@ -8,10 +8,11 @@ package com.jedi.oracle;
 import com.jedi.common.CommandType;
 import com.jedi.common.DbCommand;
 import com.jedi.common.IDataParameterCollection;
-import java.sql.Connection;
-import java.sql.SQLException;
 import oracle.jdbc.OracleCallableStatement;
 import oracle.jdbc.OracleConnection;
+
+import java.sql.Connection;
+import java.sql.SQLException;
 
 /**
  *

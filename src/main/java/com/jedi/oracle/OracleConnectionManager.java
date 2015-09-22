@@ -5,9 +5,10 @@
  */
 package com.jedi.oracle;
 
+import oracle.jdbc.OracleConnection;
+
 import java.util.HashMap;
 import java.util.Map;
-import oracle.jdbc.OracleConnection;
 
 /**
  *

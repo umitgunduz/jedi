@@ -5,15 +5,11 @@
  */
 package com.jedi.oracle;
 
-import java.math.BigDecimal;
-import java.sql.Array;
-import java.sql.Blob;
-import java.sql.Clob;
-import java.sql.Date;
-import java.sql.Time;
-import java.sql.Timestamp;
 import oracle.jdbc.OracleCallableStatement;
 import oracle.jdbc.OracleTypes;
+
+import java.math.BigDecimal;
+import java.sql.*;
 
 /**
  *
