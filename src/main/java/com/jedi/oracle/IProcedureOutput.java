@@ -15,3 +15,4 @@ import com.jedi.common.IOutput;
 public interface IProcedureOutput extends IOutput{
     
 }
+

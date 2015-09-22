@@ -12,3 +12,4 @@ package com.jedi.common;
 public interface IInput {
     
 }
+

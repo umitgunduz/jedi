@@ -14,3 +14,4 @@ import java.util.List;
 public interface IDataParameterCollection<T> extends List<T>{
     
 }
+

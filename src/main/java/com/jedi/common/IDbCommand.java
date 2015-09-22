@@ -20,3 +20,4 @@ public interface IDbCommand {
     public void setCommandType(CommandType commandType);
     public IDataParameterCollection getParameters();
 }
+

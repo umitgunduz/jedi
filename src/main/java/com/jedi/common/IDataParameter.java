@@ -21,3 +21,4 @@ public interface IDataParameter {
     public Object getValue();
     public void setValue(Object value);
 }
+

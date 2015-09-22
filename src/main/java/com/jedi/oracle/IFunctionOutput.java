@@ -14,3 +14,4 @@ import com.jedi.common.IOutput;
 public interface IFunctionOutput extends IOutput {
     
 }
+

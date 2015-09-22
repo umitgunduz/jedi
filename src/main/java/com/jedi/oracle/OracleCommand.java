@@ -83,3 +83,4 @@ public final class OracleCommand extends DbCommand {
         return "72000".equals(e.getSQLState()) && e.getErrorCode() == 4068;
     }
 }
+

@@ -12,3 +12,4 @@ package com.jedi.common;
 public abstract class DbParameter implements IDbDataParameter{
     
 }
+

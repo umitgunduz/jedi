@@ -16,3 +16,4 @@ public interface IExecutableComponent<In extends IInput, Out extends IOutput>
 
     Out execute(In input) throws Exception;
 }
+

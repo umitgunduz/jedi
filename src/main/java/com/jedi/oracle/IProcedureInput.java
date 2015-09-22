@@ -15,3 +15,4 @@ import com.jedi.common.IInput;
 public interface IProcedureInput extends IInput{
     
 }
+

@@ -50,3 +50,4 @@ public class OracleConnectionManager {
         return connections.get(DEFAULT);
     }
 }
+

@@ -31,3 +31,4 @@ public interface IProcedure<In extends IProcedureInput, Out extends IProcedureOu
 
     public Map getTypeMap();
 }
+

@@ -33,3 +33,4 @@ public abstract class Function<In extends IFunctionInput, Out extends IFunctionO
         return result;
     }
 }
+

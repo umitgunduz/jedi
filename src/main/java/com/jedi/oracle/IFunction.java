@@ -30,3 +30,4 @@ public interface IFunction <In extends IFunctionInput, Out extends IFunctionOutp
     
     public Map getTypeMap();
 }
+

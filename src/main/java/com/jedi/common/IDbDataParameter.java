@@ -21,3 +21,4 @@ public interface IDbDataParameter extends IDataParameter {
     public void setSize(int size);
 
 }
+

@@ -14,3 +14,4 @@ import com.jedi.common.IInput;
 public interface IFunctionInput extends IInput{
     
 }
+
