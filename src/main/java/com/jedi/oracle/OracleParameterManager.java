@@ -113,11 +113,11 @@ public class OracleParameterManager {
 
     private interface IStatementParameter {
 
-        public void registerInputParameter(OracleParameter parameter, OracleCallableStatement statement) throws Exception;
+        void registerInputParameter(OracleParameter parameter, OracleCallableStatement statement) throws Exception;
 
-        public void registerOutParameter(OracleParameter parameter, OracleCallableStatement statement) throws Exception;
+        void registerOutParameter(OracleParameter parameter, OracleCallableStatement statement) throws Exception;
 
-        public void bindOutParameter(OracleParameter parameter, OracleCallableStatement statement) throws Exception;
+        void bindOutParameter(OracleParameter parameter, OracleCallableStatement statement) throws Exception;
     }
 
     private abstract class AbstractStatementParameter implements IStatementParameter {

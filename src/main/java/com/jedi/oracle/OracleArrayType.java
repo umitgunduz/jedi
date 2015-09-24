@@ -8,7 +8,7 @@ import java.sql.SQLOutput;
 /**
  * Created by umit on 22/09/15.
  */
-public class OracleUDTTable<T> implements SQLData, IOracleCustomType {
+public abstract class OracleArrayType implements SQLData, IOracleArrayType {
     @Override
     public String getSQLTypeName() throws SQLException {
         return null;
