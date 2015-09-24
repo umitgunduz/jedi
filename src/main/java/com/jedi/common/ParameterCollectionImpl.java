@@ -3,15 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.jedi.oracle;
-
-import com.jedi.common.IOutput;
+package com.jedi.common;
 
 /**
- *
  * @author umitgunduz
  */
-public interface IOracleFunctionOutput extends IOutput {
-    
+public abstract class ParameterCollectionImpl<T> implements ParameterCollection<T> {
+
 }
 

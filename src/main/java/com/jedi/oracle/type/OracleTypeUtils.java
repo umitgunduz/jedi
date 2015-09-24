@@ -1,4 +1,4 @@
-package com.jedi.oracle;
+package com.jedi.oracle.type;
 
 import oracle.jdbc.OracleTypes;
 

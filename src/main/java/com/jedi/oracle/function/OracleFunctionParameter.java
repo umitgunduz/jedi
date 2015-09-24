@@ -3,16 +3,14 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.jedi.oracle;
+package com.jedi.oracle.function;
 
-import com.jedi.common.IOutput;
-
+import com.jedi.oracle.OracleParameters;
 
 /**
- *
  * @author umitgunduz
  */
-public interface IOracleProcedureOutput extends IOutput {
-    
+public interface OracleFunctionParameter extends OracleParameters {
+
 }
 

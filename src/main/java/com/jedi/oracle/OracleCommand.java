@@ -6,8 +6,11 @@
 package com.jedi.oracle;
 
 import com.jedi.common.CommandType;
-import com.jedi.common.DbCommand;
-import com.jedi.common.IDataParameterCollection;
+import com.jedi.common.DatabaseCommand;
+import com.jedi.common.ParameterCollection;
+import com.jedi.oracle.parameter.OracleDatabaseParameter;
+import com.jedi.oracle.parameter.OracleDatabaseParameterCollection;
+import com.jedi.oracle.parameter.OracleParameterUtils;
 import oracle.jdbc.OracleCallableStatement;
 import oracle.jdbc.OracleConnection;
 
@@ -15,15 +18,14 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 /**
- *
  * @author umitgunduz
  */
-public final class OracleCommand extends DbCommand {
+public final class OracleCommand implements DatabaseCommand {
 
     String commandText;
     CommandType commandType;
     OracleConnection connection;
-    OracleParameterCollection parameters = new OracleParameterCollection();
+    OracleDatabaseParameterCollection parameters = new OracleDatabaseParameterCollection();
 
     public OracleCommand(String commandText, OracleConnection connection) {
         this.commandText = commandText;
@@ -56,17 +58,21 @@ public final class OracleCommand extends DbCommand {
     }
 
     @Override
-    public IDataParameterCollection getParameters() {
+    public ParameterCollection getParameters() {
         return this.parameters;
     }
 
-    public OracleParameter createParameter() {
-        return new OracleParameter();
+    public void AddParameter(OracleDatabaseParameter parameter) {
+        this.parameters.add(parameter);
+    }
+
+    public void AddParameters(OracleDatabaseParameterCollection parameters) {
+        this.parameters.addAll(parameters);
     }
 
     public void execute() throws SQLException, Exception {
         OracleCallableStatement statement = (OracleCallableStatement) connection.prepareCall(commandText);
-        OracleParameterManager.register(this.parameters, statement);
+        OracleParameterUtils.register(this.parameters, statement);
         try {
             statement.execute();
         } catch (SQLException e) {
@@ -76,8 +82,8 @@ public final class OracleCommand extends DbCommand {
                 throw e;
             }
         }
-        
-        OracleParameterManager.bind(parameters, statement);
+
+        OracleParameterUtils.bind(parameters, statement);
     }
 
     private boolean reExecutionRequired(SQLException e) {

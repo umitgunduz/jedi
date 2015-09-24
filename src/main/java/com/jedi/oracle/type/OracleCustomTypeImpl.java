@@ -1,4 +1,4 @@
-package com.jedi.oracle;
+package com.jedi.oracle.type;
 
 import com.google.common.base.Function;
 import com.google.common.collect.Ordering;
@@ -15,7 +15,7 @@ import java.util.List;
 /**
  * Created by umit on 22/09/15.
  */
-public abstract class OracleCustomType implements SQLData, IOracleCustomType {
+public abstract class OracleCustomTypeImpl implements SQLData, OracleCustomType {
 
     @Override
     public String getSQLTypeName() throws SQLException {

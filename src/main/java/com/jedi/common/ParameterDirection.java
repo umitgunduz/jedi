@@ -6,12 +6,11 @@
 package com.jedi.common;
 
 /**
- *
  * @author umitgunduz
  */
 public enum ParameterDirection {
-    INPUT,
-    OUTPUT,
-    INPUTOUTPUT
+    Input,
+    Output,
+    InputOutput
 }
 

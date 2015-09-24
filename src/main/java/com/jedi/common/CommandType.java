@@ -6,7 +6,6 @@
 package com.jedi.common;
 
 /**
- *
  * @author umitgunduz
  */
 public enum CommandType {

@@ -1,4 +1,4 @@
-package com.jedi.oracle;
+package com.jedi.oracle.type;
 
 /**
  * Created by umit on 22/09/15.

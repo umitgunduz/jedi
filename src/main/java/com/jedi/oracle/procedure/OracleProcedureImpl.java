@@ -3,24 +3,22 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.jedi.oracle;
+package com.jedi.oracle.procedure;
 
+import com.jedi.oracle.OracleCommand;
+import com.jedi.oracle.OracleConnectionManager;
 import oracle.jdbc.OracleConnection;
 
 import java.util.Map;
 
 /**
- *
  * @author umitgunduz
- * @param <In>
- * @param <Out>
  */
-public abstract class OracleProcedure<In extends IOracleProcedureInput, Out extends IOracleProcedureOutput>
-        implements IOracleProcedure<In, Out> {
+public abstract class OracleProcedureImpl<T extends OracleProcedureParameter>
+        implements OracleProcedure<T> {
 
     @Override
-    public Out execute(In input) throws Exception {
-        Out result = null;
+    public T execute(T parameters) throws Exception {
         OracleConnection connection = OracleConnectionManager.getInstance().getConnection();
         String commandText = null;
 
@@ -31,7 +29,7 @@ public abstract class OracleProcedure<In extends IOracleProcedureInput, Out exte
         OracleCommand command = new OracleCommand(commandText, connection);
         command.execute();
 
-        return result;
+        return parameters;
     }
 }
 

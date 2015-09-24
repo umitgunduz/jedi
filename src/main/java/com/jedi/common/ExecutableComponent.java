@@ -3,16 +3,14 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.jedi.oracle;
-
-import com.jedi.common.IInput;
-
+package com.jedi.common;
 
 /**
- *
  * @author umitgunduz
  */
-public interface IOracleProcedureInput extends IInput {
-    
+public interface ExecutableComponent<T extends ComponentParameters>
+        extends Component {
+
+    T execute(T parameters) throws Exception;
 }
 

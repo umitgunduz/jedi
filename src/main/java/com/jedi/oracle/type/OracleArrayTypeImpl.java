@@ -1,4 +1,4 @@
-package com.jedi.oracle;
+package com.jedi.oracle.type;
 
 import java.sql.SQLData;
 import java.sql.SQLException;
@@ -8,7 +8,7 @@ import java.sql.SQLOutput;
 /**
  * Created by umit on 22/09/15.
  */
-public abstract class OracleArrayType implements SQLData, IOracleArrayType {
+public abstract class OracleArrayTypeImpl implements SQLData, OracleArrayType {
     @Override
     public String getSQLTypeName() throws SQLException {
         return null;

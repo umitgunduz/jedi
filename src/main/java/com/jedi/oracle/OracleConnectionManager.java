@@ -11,16 +11,15 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- *
  * @author umitgunduz
  */
 public class OracleConnectionManager {
 
-    private final String DEFAULT="DEFAULT";
-    
+    private final String DEFAULT = "DEFAULT";
+
     private final Map<String, OracleConnection> connections = new HashMap<String, OracleConnection>();
-    
-    
+
+
     private static final Object lock = new Object();
     private static volatile OracleConnectionManager instance;
 
@@ -37,17 +36,17 @@ public class OracleConnectionManager {
         }
         return r;
     }
-    
+
 
     public void registerConnection(OracleConnection connection) {
         connections.put(DEFAULT, connection);
     }
-    
+
     public void registerConnection(String name, OracleConnection connection) {
         connections.put(name, connection);
     }
-    
-    public OracleConnection getConnection(){
+
+    public OracleConnection getConnection() {
         return connections.get(DEFAULT);
     }
 }

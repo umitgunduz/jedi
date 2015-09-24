@@ -3,15 +3,15 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.jedi.oracle;
+package com.jedi.oracle.procedure;
 
-import com.jedi.common.IInput;
+import com.jedi.oracle.OracleParameters;
+
 
 /**
- *
  * @author umitgunduz
  */
-public interface IOracleFunctionInput extends IInput {
-    
+public interface OracleProcedureParameter extends OracleParameters {
+
 }
 
