@@ -29,14 +29,12 @@ public abstract class OracleFunctionImpl<T extends OracleFunctionParameter>
         connection.setTypeMap(map);
 
         OracleDatabaseParameterCollection databaseParameters = OracleParameterUtils.convert(parameters);
-
         OracleCommand command = new OracleCommand(commandText, connection);
         command.AddParameters(databaseParameters);
         command.execute();
         databaseParameters = (OracleDatabaseParameterCollection) command.getParameters();
         OracleParameterUtils.bind(databaseParameters, parameters);
-
-
+        
         return parameters;
     }
 }
