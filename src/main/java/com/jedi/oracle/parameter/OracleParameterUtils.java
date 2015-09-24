@@ -9,6 +9,7 @@ import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Ordering;
+import com.jedi.common.ParameterDirection;
 import com.jedi.oracle.OracleParameters;
 import com.jedi.oracle.type.OracleObjectMapping;
 import com.jedi.oracle.type.SqlTypeConverter;
@@ -100,7 +101,9 @@ public class OracleParameterUtils {
 
         for (OracleDatabaseParameter parameter : from) {
             Object value = parameter.getValue();
-            if (value != null) {
+            if (value != null &&
+                    (parameter.getParameterDirection() == ParameterDirection.Output ||
+                            parameter.getParameterDirection() == ParameterDirection.InputOutput)) {
                 Field field = findOracleParametersField(parameter.getParameterName(), to.getClass());
                 if (!field.getType().isInstance(value)) {
                     try {
