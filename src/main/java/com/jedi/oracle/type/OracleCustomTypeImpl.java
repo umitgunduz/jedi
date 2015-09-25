@@ -35,8 +35,7 @@ public abstract class OracleCustomTypeImpl implements SQLData, OracleCustomType 
         }).sortedCopy(fields);
 
         for (Field field : ordering) {
-
-            int oracleType = field.getDeclaredAnnotation(OracleObjectMapping.class).oracleType();
+            int oracleType = field.getAnnotation(OracleObjectMapping.class).oracleType();
             Object value = OracleTypeUtils.getValue(stream, oracleType);
             if (!field.getType().isInstance(value)) {
                 try {
@@ -46,7 +45,6 @@ public abstract class OracleCustomTypeImpl implements SQLData, OracleCustomType 
                 }
             }
 
-
             if (value != null) {
                 try {
                     field.set(this, value);
@@ -54,7 +52,6 @@ public abstract class OracleCustomTypeImpl implements SQLData, OracleCustomType 
                     e.printStackTrace();
                 }
             }
-
 
         }
     }

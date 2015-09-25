@@ -84,7 +84,7 @@ public class OracleParameterUtils {
         }).sortedCopy(fields);
 
         for (Field field : orderingFields) {
-            OracleObjectMapping mapping = field.getDeclaredAnnotation(OracleObjectMapping.class);
+            OracleObjectMapping mapping = field.getAnnotation(OracleObjectMapping.class);
             OracleDatabaseParameter parameter = new OracleDatabaseParameter();
             parameter.setIndex(mapping.index());
             parameter.setParameterName(mapping.name());
@@ -124,7 +124,7 @@ public class OracleParameterUtils {
         List<Field> fields = FieldUtils.getFieldsListWithAnnotation(parameterClass, OracleObjectMapping.class);
         return Iterables.find(fields, new Predicate<Field>() {
             public boolean apply(Field field) {
-                OracleObjectMapping mapping = field.getDeclaredAnnotation(OracleObjectMapping.class);
+                OracleObjectMapping mapping = field.getAnnotation(OracleObjectMapping.class);
                 return mapping.name().equals(databaseParameterName);
             }
         });
