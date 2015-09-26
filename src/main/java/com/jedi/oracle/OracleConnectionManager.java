@@ -5,8 +5,11 @@
  */
 package com.jedi.oracle;
 
-import oracle.jdbc.OracleConnection;
+import com.jedi.common.ConnectionString;
 
+import javax.naming.NamingException;
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -17,7 +20,7 @@ public class OracleConnectionManager {
 
     private final String DEFAULT = "DEFAULT";
 
-    private final Map<String, OracleConnection> connections = new HashMap<String, OracleConnection>();
+    private final Map<String, ConnectionString> connections = new HashMap<>();
 
 
     private static final Object lock = new Object();
@@ -38,16 +41,17 @@ public class OracleConnectionManager {
     }
 
 
-    public void registerConnection(OracleConnection connection) {
-        connections.put(DEFAULT, connection);
+    public void registerConnectionString(ConnectionString connectionString) {
+        connections.put(DEFAULT, connectionString);
     }
 
-    public void registerConnection(String name, OracleConnection connection) {
-        connections.put(name, connection);
+    public void registerConnectionString(String name, ConnectionString connectionString) {
+        connections.put(name, connectionString);
     }
 
-    public OracleConnection getConnection() {
-        return connections.get(DEFAULT);
+    public Connection getConnection() throws SQLException, NamingException {
+        ConnectionString connectionString = connections.get(DEFAULT);
+        return connectionString.getConnection();
     }
 }
 

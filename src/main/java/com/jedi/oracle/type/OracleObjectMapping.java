@@ -1,5 +1,7 @@
 package com.jedi.oracle.type;
 
+import com.jedi.common.ParameterDirection;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -17,4 +19,6 @@ public @interface OracleObjectMapping {
     int index();
 
     int oracleType();
+
+    ParameterDirection direction();
 }

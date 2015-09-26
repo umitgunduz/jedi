@@ -5,28 +5,31 @@
  */
 package com.jedi.oracle.procedure;
 
-import com.jedi.common.ExecutableComponent;
-
-import java.util.Map;
+import com.jedi.oracle.OracleNamedQuery;
+import com.jedi.oracle.OracleQueryParameters;
 
 /**
  * @author umitgunduz
  */
-public interface OracleProcedure<T extends OracleProcedureParameter>
-        extends ExecutableComponent<T> {
+public abstract class OracleProcedure<T extends OracleQueryParameters> extends OracleNamedQuery<T> {
 
-    String getConnectionName();
+    @Override
+    public String getName() {
+        OracleNamedProcedure description = this.getClass().getAnnotation(OracleNamedProcedure.class);
+        String result = "";
+        if (!description.schemaName().isEmpty()) {
+            result += description.schemaName() + ".";
+        }
 
-    String getName();
+        if (!description.packageName().isEmpty()) {
+            result += description.packageName() + ".";
+        }
 
-    String getSchema();
+        if (!description.name().isEmpty()) {
+            result += description.name();
+        }
 
-    String getPackage();
-
-    void afterExecute();
-
-    void beforeExecute();
-
-    Map getTypeMap();
+        return result;
+    }
 }
 

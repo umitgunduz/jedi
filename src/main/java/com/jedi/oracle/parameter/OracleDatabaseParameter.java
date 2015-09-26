@@ -7,7 +7,6 @@ package com.jedi.oracle.parameter;
 
 import com.jedi.common.DatabaseParameter;
 import com.jedi.common.ParameterDirection;
-import oracle.jdbc.OracleTypes;
 
 /**
  * @author umitgunduz
@@ -16,35 +15,39 @@ public final class OracleDatabaseParameter implements DatabaseParameter {
 
     private String name;
     private int index;
-    private int oracleType = OracleTypes.VARCHAR;
-    private ParameterDirection direction = ParameterDirection.Input;
+    private int oracleType;
+    private ParameterDirection direction;
     private Object value = null;
 
     public OracleDatabaseParameter() {
 
     }
 
-    @Override
-    public ParameterDirection getParameterDirection() {
+
+    public ParameterDirection getDirection() {
         return this.direction;
     }
 
-    @Override
+    public void setDirection(ParameterDirection direction) {
+        this.direction = direction;
+    }
+
+
     public String getParameterName() {
         return this.name;
     }
 
-    @Override
+
     public void setParameterName(String name) {
         this.name = name;
     }
 
-    @Override
+
     public Object getValue() {
         return this.value;
     }
 
-    @Override
+
     public void setValue(Object value) {
         this.value = value;
     }
@@ -65,5 +68,7 @@ public final class OracleDatabaseParameter implements DatabaseParameter {
     public void setIndex(int index) {
         this.index = index;
     }
+
+
 }
 

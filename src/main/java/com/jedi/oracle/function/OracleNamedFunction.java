@@ -15,7 +15,7 @@ import java.lang.annotation.Target;
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE) //on class level
-public @interface OracleFunctionDescription {
+public @interface OracleNamedFunction {
     String name();
 
     String schemaName();

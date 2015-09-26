@@ -5,21 +5,31 @@
  */
 package com.jedi.oracle.function;
 
-import com.jedi.common.ExecutableComponent;
-import com.jedi.oracle.OracleParameters;
-
-import java.util.Map;
+import com.jedi.oracle.OracleNamedQuery;
+import com.jedi.oracle.OracleQueryParameters;
 
 /**
  * @author umitgunduz
  */
-public interface OracleFunction<T extends OracleParameters>
-        extends ExecutableComponent<T> {
+public abstract class OracleFunction<T extends OracleQueryParameters> extends OracleNamedQuery<T> {
 
-    void afterExecute();
+    @Override
+    public String getName() {
+        OracleNamedFunction description = this.getClass().getAnnotation(OracleNamedFunction.class);
+        String result = "";
+        if (!description.schemaName().isEmpty()) {
+            result += description.schemaName() + ".";
+        }
 
-    void beforeExecute();
+        if (!description.packageName().isEmpty()) {
+            result += description.packageName() + ".";
+        }
 
-    Map getTypeMap();
+        if (!description.name().isEmpty()) {
+            result += description.name();
+        }
+
+        return result;
+    }
 }
 

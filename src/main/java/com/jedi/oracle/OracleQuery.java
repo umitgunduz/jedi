@@ -3,14 +3,16 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.jedi.oracle.function;
+package com.jedi.oracle;
 
-import com.jedi.oracle.OracleParameters;
+import com.jedi.common.SQLQuery;
 
 /**
  * @author umitgunduz
  */
-public interface OracleFunctionParameter extends OracleParameters {
+public interface OracleQuery<T extends OracleQueryParameters>
+        extends SQLQuery {
 
+    T execute(T parameters) throws Exception;
 }
 

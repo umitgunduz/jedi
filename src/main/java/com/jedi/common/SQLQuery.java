@@ -8,9 +8,7 @@ package com.jedi.common;
 /**
  * @author umitgunduz
  */
-public interface ExecutableComponent<T extends ComponentParameters>
-        extends Component {
+public interface SQLQuery {
 
-    T execute(T parameters) throws Exception;
 }
 

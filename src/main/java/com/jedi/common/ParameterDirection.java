@@ -11,6 +11,7 @@ package com.jedi.common;
 public enum ParameterDirection {
     Input,
     Output,
-    InputOutput
+    InputOutput,
+    ReturnValue
 }
 

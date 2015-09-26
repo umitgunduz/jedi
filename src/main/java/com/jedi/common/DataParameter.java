@@ -9,14 +9,6 @@ package com.jedi.common;
  * @author umitgunduz
  */
 public interface DataParameter {
-    ParameterDirection getParameterDirection();
 
-    String getParameterName();
-
-    void setParameterName(String name);
-
-    Object getValue();
-
-    void setValue(Object value);
 }
 

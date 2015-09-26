@@ -1,9 +1,14 @@
 package com.jedi.oracle.type;
 
 import oracle.jdbc.OracleTypes;
+import org.apache.commons.lang3.reflect.FieldUtils;
 
+import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.sql.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by umit on 24/09/15.
@@ -20,6 +25,26 @@ public class OracleTypeUtils {
     public static void setValue(SQLOutput stream, int oracleType, Object value) throws SQLException {
         IOracleTypeValue writer = FACTORY.getOracleTypeValue(oracleType);
         writer.write(stream, value);
+    }
+
+    public static Map<String, Class<?>> findCustomTypes(Class clazz) {
+        Map<String, Class<?>> result = new HashMap<String, Class<?>>();
+        List<Field> fields = FieldUtils.getFieldsListWithAnnotation(clazz, OracleObjectMapping.class);
+        findCustomTypesRecursive(fields, result);
+        return result;
+    }
+
+    private static void findCustomTypesRecursive(List<Field> fields, Map<String, Class<?>> map) {
+        for (Field field : fields) {
+            if (field.getType().isAnnotationPresent(OracleCustomTypeMapping.class)) {
+                OracleCustomTypeMapping mapping = field.getAnnotation(OracleCustomTypeMapping.class);
+                map.put(mapping.name(), field.getType());
+                List<Field> clazzFields = FieldUtils.getFieldsListWithAnnotation(field.getType(), OracleObjectMapping.class);
+                if (clazzFields != null && !clazzFields.isEmpty()) {
+                    findCustomTypesRecursive(clazzFields, map);
+                }
+            }
+        }
     }
 
     private class OracleTypeValueFactory {
@@ -73,7 +98,6 @@ public class OracleTypeUtils {
             }
         }
     }
-
 
     private interface IOracleTypeValue {
         Object read(SQLInput stream) throws SQLException;

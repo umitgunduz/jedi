@@ -10,7 +10,7 @@ import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Ordering;
 import com.jedi.common.ParameterDirection;
-import com.jedi.oracle.OracleParameters;
+import com.jedi.oracle.OracleQueryParameters;
 import com.jedi.oracle.type.OracleObjectMapping;
 import com.jedi.oracle.type.SqlTypeConverter;
 import oracle.jdbc.OracleCallableStatement;
@@ -39,11 +39,12 @@ public class OracleParameterUtils {
     public static void register(OracleDatabaseParameter parameter, OracleCallableStatement statement) throws Exception {
         IStatementParameter binder = FACTORY.getBinder(parameter);
 
-        switch (parameter.getParameterDirection()) {
+        switch (parameter.getDirection()) {
             case Input:
                 binder.registerInputParameter(parameter, statement);
                 break;
             case Output:
+            case ReturnValue:
                 binder.registerOutParameter(parameter, statement);
                 break;
             case InputOutput:
@@ -53,7 +54,7 @@ public class OracleParameterUtils {
         }
     }
 
-    public static void bind(OracleDatabaseParameterCollection parameters, OracleCallableStatement statement) throws Exception {
+    public static void bind(OracleCallableStatement statement, OracleDatabaseParameterCollection parameters) throws Exception {
         for (OracleDatabaseParameter parameter : parameters) {
             OracleParameterUtils.bind(parameter, statement);
         }
@@ -62,14 +63,15 @@ public class OracleParameterUtils {
     public static void bind(OracleDatabaseParameter parameter, OracleCallableStatement statement) throws Exception {
         IStatementParameter binder = FACTORY.getBinder(parameter);
 
-        switch (parameter.getParameterDirection()) {
+        switch (parameter.getDirection()) {
             case Output:
             case InputOutput:
+            case ReturnValue:
                 binder.bindOutParameter(parameter, statement);
         }
     }
 
-    public static OracleDatabaseParameterCollection convert(OracleParameters parameters) {
+    public static OracleDatabaseParameterCollection convert(OracleQueryParameters parameters) {
         OracleDatabaseParameterCollection result = new OracleDatabaseParameterCollection();
         List<Field> fields = FieldUtils.getFieldsListWithAnnotation(parameters.getClass(), OracleObjectMapping.class);
         if (fields != null && !fields.isEmpty()) {
@@ -89,21 +91,19 @@ public class OracleParameterUtils {
             parameter.setIndex(mapping.index());
             parameter.setParameterName(mapping.name());
             parameter.setOracleTypes(mapping.oracleType());
-
+            parameter.setDirection(mapping.direction());
             result.add(parameter);
         }
 
         return result;
     }
 
-    public static void bind(OracleDatabaseParameterCollection from, OracleParameters to)
+    public static void bind(OracleDatabaseParameterCollection from, OracleQueryParameters to)
             throws IllegalAccessException, InstantiationException {
 
         for (OracleDatabaseParameter parameter : from) {
             Object value = parameter.getValue();
-            if (value != null &&
-                    (parameter.getParameterDirection() == ParameterDirection.Output ||
-                            parameter.getParameterDirection() == ParameterDirection.InputOutput)) {
+            if (value != null && parameter.getDirection() != ParameterDirection.Input) {
                 Field field = findOracleParametersField(parameter.getParameterName(), to.getClass());
                 if (!field.getType().isInstance(value)) {
                     try {
