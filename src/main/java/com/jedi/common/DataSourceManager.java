@@ -18,7 +18,7 @@ public class DataSourceManager {
 
     private final String DEFAULT = "DEFAULT";
 
-    private final Map<String, DataSource> connections = new HashMap<String, DataSource>();
+    private final Map<String, DataSource> dataSourceMap = new HashMap<String, DataSource>();
 
 
     private static final Object lock = new Object();
@@ -40,19 +40,19 @@ public class DataSourceManager {
 
 
     public void registerDataSource(DataSource dataSource) {
-        connections.put(DEFAULT, dataSource);
+        dataSourceMap.put(DEFAULT, dataSource);
     }
 
     public void registerDataSource(String name, DataSource dataSource) {
-        connections.put(name, dataSource);
+        dataSourceMap.put(name, dataSource);
     }
 
     public DataSource getDataSource() throws SQLException, NamingException {
-        return connections.get(DEFAULT);
+        return dataSourceMap.get(DEFAULT);
     }
 
     public DataSource getDataSource(String name) throws SQLException, NamingException {
-        return connections.get(name);
+        return dataSourceMap.get(name);
     }
 }
 
