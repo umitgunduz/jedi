@@ -1,4 +1,4 @@
-package com.jedi.oracle.type;
+package com.jedi.oracle;
 
 import org.apache.commons.io.IOUtils;
 

@@ -1,7 +1,9 @@
-package com.jedi.oracle.type;
+package com.jedi.oracle;
 
 import com.google.common.base.Function;
 import com.google.common.collect.Ordering;
+import com.jedi.common.CustomType;
+import com.jedi.common.CustomTypeMapping;
 import org.apache.commons.lang3.reflect.FieldUtils;
 
 import java.io.IOException;
@@ -15,12 +17,12 @@ import java.util.List;
 /**
  * Created by umit on 22/09/15.
  */
-public abstract class OracleCustomTypeImpl implements SQLData, OracleCustomType {
+public abstract class OracleCustomType implements SQLData, CustomType {
 
     @Override
     public String getSQLTypeName() throws SQLException {
 
-        OracleCustomTypeMapping mapping = this.getClass().getAnnotation(OracleCustomTypeMapping.class);
+        CustomTypeMapping mapping = this.getClass().getAnnotation(CustomTypeMapping.class);
         return mapping.name();
     }
 

@@ -1,5 +1,6 @@
-package com.jedi.oracle.type;
+package com.jedi.oracle;
 
+import com.jedi.common.CustomTypeMapping;
 import oracle.jdbc.OracleTypes;
 import org.apache.commons.lang3.reflect.FieldUtils;
 
@@ -36,8 +37,8 @@ public class OracleTypeUtils {
 
     private static void findCustomTypesRecursive(List<Field> fields, Map<String, Class<?>> map) {
         for (Field field : fields) {
-            if (field.getType().isAnnotationPresent(OracleCustomTypeMapping.class)) {
-                OracleCustomTypeMapping mapping = field.getAnnotation(OracleCustomTypeMapping.class);
+            if (field.getType().isAnnotationPresent(CustomTypeMapping.class)) {
+                CustomTypeMapping mapping = field.getAnnotation(CustomTypeMapping.class);
                 map.put(mapping.name(), field.getType());
                 List<Field> clazzFields = FieldUtils.getFieldsListWithAnnotation(field.getType(), OracleObjectMapping.class);
                 if (clazzFields != null && !clazzFields.isEmpty()) {

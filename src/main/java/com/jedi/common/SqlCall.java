@@ -8,7 +8,8 @@ package com.jedi.common;
 /**
  * @author umitgunduz
  */
-public abstract class ParameterCollectionImpl<T> implements ParameterCollection<T> {
+public interface SqlCall<T extends SqlCallParameters> {
 
+    T execute(T parameters) throws Exception;
 }
 

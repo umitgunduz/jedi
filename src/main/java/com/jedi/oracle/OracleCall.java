@@ -2,10 +2,7 @@ package com.jedi.oracle;
 
 import com.google.common.base.Function;
 import com.google.common.collect.Ordering;
-import com.jedi.oracle.parameter.OracleDatabaseParameterCollection;
-import com.jedi.oracle.parameter.OracleParameterUtils;
-import com.jedi.oracle.type.OracleObjectMapping;
-import com.jedi.oracle.type.OracleTypeUtils;
+import com.jedi.common.SqlCall;
 import oracle.jdbc.OracleCallableStatement;
 import org.apache.commons.lang3.reflect.FieldUtils;
 
@@ -19,7 +16,7 @@ import java.util.Map;
 /**
  * Created by umit on 26/09/15.
  */
-public abstract class OracleNamedQuery<T extends OracleQueryParameters> implements OracleQuery<T> {
+public abstract class OracleCall<T extends OracleCallParameters> implements SqlCall<T> {
     @Override
     public T execute(T parameters) throws Exception {
         Connection connection = OracleConnectionManager.getInstance().getConnection();
@@ -31,7 +28,19 @@ public abstract class OracleNamedQuery<T extends OracleQueryParameters> implemen
             connection.setTypeMap(map);
         }
 
-        execute(connection, sql, parameters);
+        OracleCallableStatement statement = (OracleCallableStatement) connection.prepareCall(sql);
+        OracleParameterUtils.register(parameters, statement);
+        try {
+            statement.execute();
+        } catch (SQLException e) {
+            if (reExecutionRequired(e)) {
+                statement.execute();
+            } else {
+                throw e;
+            }
+        }
+
+        OracleParameterUtils.bind(statement, parameters);
 
         return parameters;
     }
@@ -44,43 +53,25 @@ public abstract class OracleNamedQuery<T extends OracleQueryParameters> implemen
 
     public abstract String getName();
 
-    private void execute(Connection connection, String sql, T parameters) throws Exception {
-        OracleCallableStatement statement = (OracleCallableStatement) connection.prepareCall(sql);
-        OracleDatabaseParameterCollection databaseParameters = OracleParameterUtils.convert(parameters);
-        OracleParameterUtils.register(databaseParameters, statement);
-        try {
-            statement.execute();
-        } catch (SQLException e) {
-            if (reExecutionRequired(e)) {
-                statement.execute();
-            } else {
-                throw e;
-            }
-        }
-
-        OracleParameterUtils.bind(statement, databaseParameters);
-        OracleParameterUtils.bind(databaseParameters, parameters);
-    }
-
     private boolean reExecutionRequired(SQLException e) {
         return "72000".equals(e.getSQLState()) && e.getErrorCode() == 4068;
     }
 
-    private String createSQL(String queryName, OracleQueryParameters parameters) {
-        List<Field> fields = FieldUtils.getFieldsListWithAnnotation(parameters.getClass(), OracleObjectMapping.class);
+    private String createSQL(String queryName, OracleCallParameters parameters) {
+        List<Field> fields = FieldUtils.getFieldsListWithAnnotation(parameters.getClass(), OracleParameterMapping.class);
         String retVal = "";
         String params = "";
 
         if (fields != null && !fields.isEmpty()) {
             List<Field> orderingFields = Ordering.natural().nullsFirst().onResultOf(new Function<Field, Integer>() {
                 public Integer apply(Field field) {
-                    OracleObjectMapping mapping = field.getAnnotation(OracleObjectMapping.class);
+                    OracleParameterMapping mapping = field.getAnnotation(OracleParameterMapping.class);
                     return mapping.index();
                 }
             }).sortedCopy(fields);
 
             for (Field field : orderingFields) {
-                OracleObjectMapping mapping = field.getAnnotation(OracleObjectMapping.class);
+                OracleParameterMapping mapping = field.getAnnotation(OracleParameterMapping.class);
                 switch (mapping.direction()) {
                     case ReturnValue:
                         retVal = "p_return_value => ?";
