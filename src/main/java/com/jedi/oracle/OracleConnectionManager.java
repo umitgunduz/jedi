@@ -20,7 +20,7 @@ public class OracleConnectionManager {
 
     private final String DEFAULT = "DEFAULT";
 
-    private final Map<String, ConnectionString> connections = new HashMap<>();
+    private final Map<String, ConnectionString> connections = new HashMap<String, ConnectionString>();
 
 
     private static final Object lock = new Object();
