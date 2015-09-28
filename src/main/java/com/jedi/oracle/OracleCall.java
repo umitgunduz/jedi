@@ -2,10 +2,12 @@ package com.jedi.oracle;
 
 import com.google.common.base.Function;
 import com.google.common.collect.Ordering;
+import com.jedi.common.DataSourceManager;
 import com.jedi.common.SqlCall;
 import oracle.jdbc.OracleCallableStatement;
 import org.apache.commons.lang3.reflect.FieldUtils;
 
+import javax.sql.DataSource;
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.sql.Connection;
@@ -17,9 +19,38 @@ import java.util.Map;
  * Created by umit on 26/09/15.
  */
 public abstract class OracleCall<T extends OracleParameters> implements SqlCall<T> {
+
     @Override
     public T execute(T parameters) throws Exception {
-        Connection connection = OracleConnectionManager.getInstance().getConnection();
+        DataSource dataSource = DataSourceManager.getInstance().getDataSource();
+        return execute(dataSource, parameters);
+    }
+
+    @Override
+    public T execute(DataSource dataSource, T parameters) throws Exception {
+        Connection connection = dataSource.getConnection();
+        try {
+            parameters = execute(connection, parameters);
+        } finally {
+            if (!connection.isClosed()) {
+                connection.close();
+            }
+        }
+
+        return parameters;
+    }
+
+    @Override
+    public T execute(Connection connection, T parameters) throws Exception {
+        if (connection == null) {
+            DataSource dataSource = DataSourceManager.getInstance().getDataSource();
+            if (dataSource == null) {
+                throw new RuntimeException("Datasource is null");
+            }
+
+            connection = dataSource.getConnection();
+        }
+
         String sql = this.createSQL(this.getName(), parameters);
         Map customTypes = this.getTypeMap();
         if (customTypes != null && !customTypes.isEmpty()) {
@@ -41,6 +72,7 @@ public abstract class OracleCall<T extends OracleParameters> implements SqlCall<
         }
 
         OracleParameterUtils.bind(statement, parameters);
+
 
         return parameters;
     }

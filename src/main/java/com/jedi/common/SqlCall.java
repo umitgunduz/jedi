@@ -5,11 +5,18 @@
  */
 package com.jedi.common;
 
+import javax.sql.DataSource;
+import java.sql.Connection;
+
 /**
  * @author umitgunduz
  */
 public interface SqlCall<T extends SqlParameters> {
 
     T execute(T parameters) throws Exception;
+
+    T execute(Connection connection, T parameters) throws Exception;
+
+    T execute(DataSource dataSource, T parameters) throws Exception;
 }
 
