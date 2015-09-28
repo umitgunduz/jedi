@@ -30,7 +30,7 @@ public class OracleTypeUtils {
 
     public static Map<String, Class<?>> findCustomTypes(Class clazz) {
         Map<String, Class<?>> result = new HashMap<String, Class<?>>();
-        List<Field> fields = FieldUtils.getFieldsListWithAnnotation(clazz, OracleObjectMapping.class);
+        List<Field> fields = FieldUtils.getFieldsListWithAnnotation(clazz, OracleParameterMapping.class);
         findCustomTypesRecursive(fields, result);
         return result;
     }
