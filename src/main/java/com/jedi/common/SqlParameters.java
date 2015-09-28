@@ -8,8 +8,8 @@ package com.jedi.common;
 /**
  * @author umitgunduz
  */
-public interface SqlCall<T extends SqlParameters> {
+public interface SqlParameters {
 
-    T execute(T parameters) throws Exception;
+
 }
 

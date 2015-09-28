@@ -10,7 +10,7 @@ import com.jedi.common.StoredProcedure;
 /**
  * @author umitgunduz
  */
-public abstract class OracleProcedure<T extends OracleCallParameters> extends OracleCall<T> {
+public abstract class OracleProcedure<T extends OracleParameters> extends OracleCall<T> {
 
     @Override
     public String getName() {

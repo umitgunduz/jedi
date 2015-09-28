@@ -16,7 +16,7 @@ import java.util.Map;
 /**
  * Created by umit on 26/09/15.
  */
-public abstract class OracleCall<T extends OracleCallParameters> implements SqlCall<T> {
+public abstract class OracleCall<T extends OracleParameters> implements SqlCall<T> {
     @Override
     public T execute(T parameters) throws Exception {
         Connection connection = OracleConnectionManager.getInstance().getConnection();
@@ -57,7 +57,7 @@ public abstract class OracleCall<T extends OracleCallParameters> implements SqlC
         return "72000".equals(e.getSQLState()) && e.getErrorCode() == 4068;
     }
 
-    private String createSQL(String queryName, OracleCallParameters parameters) {
+    private String createSQL(String queryName, OracleParameters parameters) {
         List<Field> fields = FieldUtils.getFieldsListWithAnnotation(parameters.getClass(), OracleParameterMapping.class);
         String retVal = "";
         String params = "";

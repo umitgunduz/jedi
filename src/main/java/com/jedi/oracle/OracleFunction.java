@@ -10,7 +10,7 @@ import com.jedi.common.StoredFunction;
 /**
  * @author umitgunduz
  */
-public abstract class OracleFunction<T extends OracleCallParameters> extends OracleCall<T> {
+public abstract class OracleFunction<T extends OracleParameters> extends OracleCall<T> {
 
     @Override
     public String getName() {
