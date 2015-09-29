@@ -30,9 +30,9 @@ import java.lang.annotation.Target;
 @Target(ElementType.FIELD)
 public @interface OracleObjectMapping {
 
-    String name();
+    String name() default "";
 
-    int index();
+    int index() default 1;
 
     int oracleType();
 }

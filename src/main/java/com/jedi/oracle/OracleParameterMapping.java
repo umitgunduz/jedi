@@ -38,4 +38,6 @@ public @interface OracleParameterMapping {
     int oracleType();
 
     ParameterDirection direction();
+
+    String customTypeName() default "";
 }

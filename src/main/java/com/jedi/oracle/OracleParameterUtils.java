@@ -46,7 +46,7 @@ public class OracleParameterUtils {
 
     public static void register(Object parameters, OracleCallableStatement statement) throws Exception {
         List<Field> fields = FieldUtils.getFieldsListWithAnnotation(parameters.getClass(), OracleParameterMapping.class);
-        if (fields != null && !fields.isEmpty()) {
+        if (fields == null || fields.isEmpty()) {
             return;
         }
 
@@ -178,7 +178,11 @@ public class OracleParameterUtils {
         @Override
         public void registerOutParameter(Field field, OracleParameterMapping mapping, OracleCallableStatement statement) throws Exception {
             String name = mapping.name();
-            statement.registerOutParameter(name, mapping.oracleType());
+            if (!mapping.customTypeName().isEmpty()) {
+                statement.registerOutParameter(name, mapping.oracleType(), mapping.customTypeName());
+            } else {
+                statement.registerOutParameter(name, mapping.oracleType());
+            }
         }
     }
 

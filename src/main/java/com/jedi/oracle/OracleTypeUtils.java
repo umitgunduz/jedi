@@ -23,6 +23,7 @@ import oracle.jdbc.OracleTypes;
 import org.apache.commons.lang3.reflect.FieldUtils;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.ParameterizedType;
 import java.math.BigDecimal;
 import java.sql.*;
 import java.util.HashMap;
@@ -47,20 +48,36 @@ public class OracleTypeUtils {
     }
 
     public static Map<String, Class<?>> findCustomTypes(Class clazz) {
-        Map<String, Class<?>> result = new HashMap<String, Class<?>>();
+        Map<String, Class<?>> map = new HashMap<String, Class<?>>();
         List<Field> fields = FieldUtils.getFieldsListWithAnnotation(clazz, OracleParameterMapping.class);
-        findCustomTypesRecursive(fields, result);
-        return result;
+        findCustomTypesRecursive(fields, map);
+        /*
+        for (Field field : fields) {
+            if (field.getType().isAnnotationPresent(CustomTypeMapping.class)) {
+                List<Field> oracleObjectFields = FieldUtils.getFieldsListWithAnnotation(field.getType(), OracleObjectMapping.class);
+                findCustomTypesRecursive(oracleObjectFields, map);
+            }
+        }
+        */
+
+        return map;
     }
 
     private static void findCustomTypesRecursive(List<Field> fields, Map<String, Class<?>> map) {
         for (Field field : fields) {
-            if (field.getType().isAnnotationPresent(CustomTypeMapping.class)) {
-                CustomTypeMapping mapping = field.getAnnotation(CustomTypeMapping.class);
-                map.put(mapping.name(), field.getType());
-                List<Field> clazzFields = FieldUtils.getFieldsListWithAnnotation(field.getType(), OracleObjectMapping.class);
-                if (clazzFields != null && !clazzFields.isEmpty()) {
-                    findCustomTypesRecursive(clazzFields, map);
+            Class fieldType = field.getType();
+            if (List.class.isAssignableFrom(fieldType)) {
+                ParameterizedType listType = (ParameterizedType) field.getGenericType();
+                fieldType = (Class<?>) listType.getActualTypeArguments()[0];
+            }
+
+
+            if (fieldType.isAnnotationPresent(CustomTypeMapping.class)) {
+                CustomTypeMapping mapping = (CustomTypeMapping) fieldType.getAnnotation(CustomTypeMapping.class);
+                map.put(mapping.name(), fieldType);
+                List<Field> oracleObjectFields = FieldUtils.getFieldsListWithAnnotation(fieldType, OracleObjectMapping.class);
+                if (oracleObjectFields != null && !oracleObjectFields.isEmpty()) {
+                    findCustomTypesRecursive(oracleObjectFields, map);
                 }
             }
         }

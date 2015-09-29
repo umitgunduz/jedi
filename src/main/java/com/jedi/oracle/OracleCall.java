@@ -150,7 +150,8 @@ public abstract class OracleCall<T extends OracleParameters> implements SqlCall<
         if (!params.isEmpty()) {
             sb.append(params);
         }
-        sb.append(")");
+        sb.append(");");
+        sb.append(" ");
         sb.append("END;");
 
         return sb.toString();
