@@ -39,6 +39,10 @@ public class SqlTypeConverter {
         return converter.convert(value);
     }
 
+    private interface ISqlTypeConverter<From, To> {
+        To convert(From from) throws SQLException, IOException;
+    }
+
     private class SqlTypeConverterFactory {
         ISqlTypeConverter getConverter(Class<?> from, Class<?> to) {
             if (from.isAssignableFrom(Blob.class) && to.isAssignableFrom(String.class)) {
@@ -52,10 +56,6 @@ public class SqlTypeConverter {
             }
 
         }
-    }
-
-    private interface ISqlTypeConverter<From, To> {
-        To convert(From from) throws SQLException, IOException;
     }
 
     private class SqlBlobToStringConverter implements ISqlTypeConverter<Blob, String> {

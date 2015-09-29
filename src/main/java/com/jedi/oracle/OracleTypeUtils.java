@@ -51,15 +51,6 @@ public class OracleTypeUtils {
         Map<String, Class<?>> map = new HashMap<String, Class<?>>();
         List<Field> fields = FieldUtils.getFieldsListWithAnnotation(clazz, OracleParameterMapping.class);
         findCustomTypesRecursive(fields, map);
-        /*
-        for (Field field : fields) {
-            if (field.getType().isAnnotationPresent(CustomTypeMapping.class)) {
-                List<Field> oracleObjectFields = FieldUtils.getFieldsListWithAnnotation(field.getType(), OracleObjectMapping.class);
-                findCustomTypesRecursive(oracleObjectFields, map);
-            }
-        }
-        */
-
         return map;
     }
 
@@ -81,6 +72,12 @@ public class OracleTypeUtils {
                 }
             }
         }
+    }
+
+    private interface IOracleTypeValue {
+        Object read(SQLInput stream) throws SQLException;
+
+        void write(SQLOutput stream, Object value) throws SQLException;
     }
 
     private class OracleTypeValueFactory {
@@ -133,12 +130,6 @@ public class OracleTypeUtils {
 
             }
         }
-    }
-
-    private interface IOracleTypeValue {
-        Object read(SQLInput stream) throws SQLException;
-
-        void write(SQLOutput stream, Object value) throws SQLException;
     }
 
     private class StringOracleTypeValue implements IOracleTypeValue {

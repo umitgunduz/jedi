@@ -29,13 +29,10 @@ import java.util.Map;
  */
 public class DataSourceManager {
 
-    private final String DEFAULT = "DEFAULT";
-
-    private final Map<String, DataSource> dataSourceMap = new HashMap<String, DataSource>();
-
-
     private static final Object lock = new Object();
     private static volatile DataSourceManager instance;
+    private final String DEFAULT = "DEFAULT";
+    private final Map<String, DataSource> dataSourceMap = new HashMap<String, DataSource>();
 
     public static DataSourceManager getInstance() {
         DataSourceManager r = instance;

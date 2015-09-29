@@ -19,6 +19,8 @@
 package com.jedi.oracle;
 
 import com.google.common.base.Function;
+import com.google.common.base.Predicate;
+import com.google.common.collect.Iterables;
 import com.google.common.collect.Ordering;
 import com.jedi.common.DataSourceManager;
 import com.jedi.common.SqlCall;
@@ -27,7 +29,6 @@ import org.apache.commons.lang3.reflect.FieldUtils;
 
 import javax.sql.DataSource;
 import java.lang.reflect.Field;
-import java.lang.reflect.ParameterizedType;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
@@ -36,30 +37,30 @@ import java.util.Map;
 /**
  * Created by umit on 26/09/15.
  */
-public abstract class OracleCall<T extends OracleParameters> implements SqlCall<T> {
+public abstract class OracleCall implements SqlCall {
+
+    final private OracleParameterCollection parameters = new OracleParameterCollection();
 
     @Override
-    public T execute(T parameters) throws Exception {
+    public void execute() throws Exception {
         DataSource dataSource = DataSourceManager.getInstance().getDataSource();
-        return execute(dataSource, parameters);
+        this.execute(dataSource);
     }
 
     @Override
-    public T execute(DataSource dataSource, T parameters) throws Exception {
+    public void execute(DataSource dataSource) throws Exception {
         Connection connection = dataSource.getConnection();
         try {
-            parameters = execute(connection, parameters);
+            this.execute(connection);
         } finally {
             if (!connection.isClosed()) {
                 connection.close();
             }
         }
-
-        return parameters;
     }
 
     @Override
-    public T execute(Connection connection, T parameters) throws Exception {
+    public void execute(Connection connection) throws Exception {
         if (connection == null) {
             DataSource dataSource = DataSourceManager.getInstance().getDataSource();
             if (dataSource == null) {
@@ -69,7 +70,9 @@ public abstract class OracleCall<T extends OracleParameters> implements SqlCall<
             connection = dataSource.getConnection();
         }
 
-        String sql = this.createSQL(this.getName(), parameters);
+        fillParametersFromFields();
+
+        String sql = this.createSQL(this.getName());
         Map customTypes = this.getTypeMap();
         if (customTypes != null && !customTypes.isEmpty()) {
             Map map = connection.getTypeMap();
@@ -78,7 +81,7 @@ public abstract class OracleCall<T extends OracleParameters> implements SqlCall<
         }
 
         OracleCallableStatement statement = (OracleCallableStatement) connection.prepareCall(sql);
-        OracleParameterUtils.register(parameters, statement);
+        OracleParameterUtils.register(statement, this.parameters);
         try {
             statement.execute();
         } catch (SQLException e) {
@@ -89,16 +92,65 @@ public abstract class OracleCall<T extends OracleParameters> implements SqlCall<
             }
         }
 
-        OracleParameterUtils.bind(statement, parameters);
-
-
-        return parameters;
+        OracleParameterUtils.bind(this.parameters, statement);
+        fillFieldValuesFromParameters();
     }
 
+    private void fillParametersFromFields() throws IllegalAccessException {
+        List<Field> fields = FieldUtils.getFieldsListWithAnnotation(getClass(), OracleParameterMapping.class);
+        if (fields == null || fields.isEmpty()) {
+            return;
+        }
+
+        for (Field field : fields) {
+            OracleParameterMapping mapping = field.getAnnotation(OracleParameterMapping.class);
+            OracleParameter parameter = new OracleParameter();
+            parameter.setDbType(mapping.dbType());
+            parameter.setDirection(mapping.direction());
+            parameter.setIndex(mapping.index());
+            parameter.setName(mapping.name());
+            parameter.setOracleDbType(mapping.oracleType());
+            parameter.setCustomTypeName(mapping.customTypeName());
+            switch (parameter.getDirection()) {
+                case Input:
+                case InputOutput:
+                    field.setAccessible(true);
+                    parameter.setValue(field.get(this));
+                    break;
+            }
+
+            this.parameters.add(parameter);
+        }
+    }
+
+    private void fillFieldValuesFromParameters() throws IllegalAccessException {
+        List<Field> fields = FieldUtils.getFieldsListWithAnnotation(getClass(), OracleParameterMapping.class);
+        if (fields == null || fields.isEmpty()) {
+            return;
+        }
+
+
+        for (final OracleParameter parameter : this.parameters) {
+            switch (parameter.getDirection()) {
+                case ReturnValue:
+                case InputOutput:
+                case Output:
+                    Field field = Iterables.find(fields, new Predicate<Field>() {
+                        public boolean apply(Field item) {
+                            OracleParameterMapping mapping = item.getAnnotation(OracleParameterMapping.class);
+                            return mapping.name().equals(parameter.getName());
+                        }
+                    });
+
+                    field.setAccessible(true);
+                    field.set(this, parameter.getValue());
+            }
+        }
+    }
+
+
     private Map getTypeMap() {
-        ParameterizedType parameterizedType = (ParameterizedType) this.getClass().getGenericSuperclass();
-        Class parameterClass = (Class) parameterizedType.getActualTypeArguments()[0];
-        return OracleTypeUtils.findCustomTypes(parameterClass);
+        return OracleTypeUtils.findCustomTypes(getClass());
     }
 
     public abstract String getName();
@@ -107,8 +159,8 @@ public abstract class OracleCall<T extends OracleParameters> implements SqlCall<
         return "72000".equals(e.getSQLState()) && e.getErrorCode() == 4068;
     }
 
-    private String createSQL(String queryName, OracleParameters parameters) {
-        List<Field> fields = FieldUtils.getFieldsListWithAnnotation(parameters.getClass(), OracleParameterMapping.class);
+    private String createSQL(String queryName) {
+        List<Field> fields = FieldUtils.getFieldsListWithAnnotation(getClass(), OracleParameterMapping.class);
         String retVal = "";
         String params = "";
 

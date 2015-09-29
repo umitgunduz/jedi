@@ -67,6 +67,7 @@ public abstract class OracleCustomType implements SQLData, CustomType {
 
             if (value != null) {
                 try {
+                    field.setAccessible(true);
                     field.set(this, value);
                 } catch (IllegalAccessException e) {
                     e.printStackTrace();

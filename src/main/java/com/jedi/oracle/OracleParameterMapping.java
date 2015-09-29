@@ -35,6 +35,8 @@ public @interface OracleParameterMapping {
 
     int index();
 
+    int dbType();
+
     int oracleType();
 
     ParameterDirection direction();

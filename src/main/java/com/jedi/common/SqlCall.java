@@ -29,12 +29,12 @@ import java.sql.Connection;
 /**
  * @author umitgunduz
  */
-public interface SqlCall<T extends SqlParameters> {
+public interface SqlCall {
 
-    T execute(T parameters) throws Exception;
+    void execute() throws Exception;
 
-    T execute(Connection connection, T parameters) throws Exception;
+    void execute(Connection connection) throws Exception;
 
-    T execute(DataSource dataSource, T parameters) throws Exception;
+    void execute(DataSource dataSource) throws Exception;
 }
 

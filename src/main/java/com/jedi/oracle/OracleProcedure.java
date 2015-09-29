@@ -28,7 +28,7 @@ import com.jedi.common.StoredProcedure;
 /**
  * @author umitgunduz
  */
-public abstract class OracleProcedure<T extends OracleParameters> extends OracleCall<T> {
+public abstract class OracleProcedure extends OracleCall {
 
     @Override
     public String getName() {
