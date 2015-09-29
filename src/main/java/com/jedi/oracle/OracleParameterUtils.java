@@ -476,7 +476,10 @@ public class OracleParameterUtils {
 
         @Override
         public void bindOutParameter(OracleCallableStatement statement, Object parameters, Field field, OracleParameterMapping mapping) throws Exception {
-            throw new UnsupportedOperationException();
+            int index = mapping.index();
+            Array array = statement.getArray(index);
+            ResultSet resultSet = array.getResultSet();
+
         }
     }
 }
