@@ -124,13 +124,13 @@ public abstract class OracleCall<T extends OracleParameters> implements SqlCall<
                 OracleParameterMapping mapping = field.getAnnotation(OracleParameterMapping.class);
                 switch (mapping.direction()) {
                     case ReturnValue:
-                        retVal = "p_return_value => ?";
+                        retVal = "? :=";
                         break;
                     default:
                         if (params.indexOf(',') == -1) {
-                            params += mapping.name() + " => ?";
+                            params += mapping.name() + "?";
                         } else {
-                            params += ", " + mapping.name() + " => ?";
+                            params += ", " + mapping.name() + "?";
                         }
                         break;
                 }

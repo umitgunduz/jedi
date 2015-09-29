@@ -83,7 +83,7 @@ public class OracleParameterUtils {
 
     public static void bind(OracleCallableStatement statement, Object parameters) throws Exception {
         List<Field> fields = FieldUtils.getFieldsListWithAnnotation(parameters.getClass(), OracleParameterMapping.class);
-        if (fields != null && !fields.isEmpty()) {
+        if (fields == null || fields.isEmpty()) {
             return;
         }
 
@@ -177,11 +177,11 @@ public class OracleParameterUtils {
 
         @Override
         public void registerOutParameter(Field field, OracleParameterMapping mapping, OracleCallableStatement statement) throws Exception {
-            String name = mapping.name();
+            int index = mapping.index();
             if (!mapping.customTypeName().isEmpty()) {
-                statement.registerOutParameter(name, mapping.oracleType(), mapping.customTypeName());
+                statement.registerOutParameter(index, mapping.oracleType(), mapping.customTypeName());
             } else {
-                statement.registerOutParameter(name, mapping.oracleType());
+                statement.registerOutParameter(index, mapping.oracleType());
             }
         }
     }
@@ -190,15 +190,15 @@ public class OracleParameterUtils {
 
         @Override
         public void registerInputParameter(Object parameters, Field field, OracleParameterMapping mapping, OracleCallableStatement statement) throws Exception {
-            String name = mapping.name();
+            int index = mapping.index();
             String value = (String) field.get(parameters);
-            statement.setString(name, value);
+            statement.setString(index, value);
         }
 
         @Override
         public void bindOutParameter(OracleCallableStatement statement, Object parameters, Field field, OracleParameterMapping mapping) throws Exception {
-            String name = mapping.name();
-            String value = statement.getString(name);
+            int index = mapping.index();
+            String value = statement.getString(index);
             field.set(parameters, value);
         }
     }
@@ -207,15 +207,15 @@ public class OracleParameterUtils {
 
         @Override
         public void registerInputParameter(Object parameters, Field field, OracleParameterMapping mapping, OracleCallableStatement statement) throws Exception {
-            String name = mapping.name();
+            int index = mapping.index();
             BigDecimal value = (BigDecimal) field.get(parameters);
-            statement.setBigDecimal(name, value);
+            statement.setBigDecimal(index, value);
         }
 
         @Override
         public void bindOutParameter(OracleCallableStatement statement, Object parameters, Field field, OracleParameterMapping mapping) throws Exception {
-            String name = mapping.name();
-            BigDecimal value = statement.getBigDecimal(name);
+            int index = mapping.index();
+            BigDecimal value = statement.getBigDecimal(index);
             field.set(parameters, value);
         }
     }
@@ -224,15 +224,15 @@ public class OracleParameterUtils {
 
         @Override
         public void registerInputParameter(Object parameters, Field field, OracleParameterMapping mapping, OracleCallableStatement statement) throws Exception {
-            String name = mapping.name();
+            int index = mapping.index();
             Boolean value = (Boolean) field.get(parameters);
-            statement.setBoolean(name, value);
+            statement.setBoolean(index, value);
         }
 
         @Override
         public void bindOutParameter(OracleCallableStatement statement, Object parameters, Field field, OracleParameterMapping mapping) throws Exception {
-            String name = mapping.name();
-            Boolean value = statement.getBoolean(name);
+            int index = mapping.index();
+            Boolean value = statement.getBoolean(index);
             field.set(parameters, value);
         }
     }
@@ -241,15 +241,15 @@ public class OracleParameterUtils {
 
         @Override
         public void registerInputParameter(Object parameters, Field field, OracleParameterMapping mapping, OracleCallableStatement statement) throws Exception {
-            String name = mapping.name();
+            int index = mapping.index();
             Byte value = (Byte) field.get(parameters);
-            statement.setByte(name, value);
+            statement.setByte(index, value);
         }
 
         @Override
         public void bindOutParameter(OracleCallableStatement statement, Object parameters, Field field, OracleParameterMapping mapping) throws Exception {
-            String name = mapping.name();
-            Byte value = statement.getByte(name);
+            int index = mapping.index();
+            Byte value = statement.getByte(index);
             field.set(parameters, value);
         }
     }
@@ -258,15 +258,15 @@ public class OracleParameterUtils {
 
         @Override
         public void registerInputParameter(Object parameters, Field field, OracleParameterMapping mapping, OracleCallableStatement statement) throws Exception {
-            String name = mapping.name();
+            int index = mapping.index();
             Short value = (Short) field.get(parameters);
-            statement.setShort(name, value);
+            statement.setShort(index, value);
         }
 
         @Override
         public void bindOutParameter(OracleCallableStatement statement, Object parameters, Field field, OracleParameterMapping mapping) throws Exception {
-            String name = mapping.name();
-            Short value = statement.getShort(name);
+            int index = mapping.index();
+            Short value = statement.getShort(index);
             field.set(parameters, value);
         }
     }
@@ -275,15 +275,15 @@ public class OracleParameterUtils {
 
         @Override
         public void registerInputParameter(Object parameters, Field field, OracleParameterMapping mapping, OracleCallableStatement statement) throws Exception {
-            String name = mapping.name();
+            int index = mapping.index();
             Integer value = (Integer) field.get(parameters);
-            statement.setInt(name, value);
+            statement.setInt(index, value);
         }
 
         @Override
         public void bindOutParameter(OracleCallableStatement statement, Object parameters, Field field, OracleParameterMapping mapping) throws Exception {
-            String name = mapping.name();
-            Integer value = statement.getInt(name);
+            int index = mapping.index();
+            Integer value = statement.getInt(index);
             field.set(parameters, value);
         }
     }
@@ -292,15 +292,15 @@ public class OracleParameterUtils {
 
         @Override
         public void registerInputParameter(Object parameters, Field field, OracleParameterMapping mapping, OracleCallableStatement statement) throws Exception {
-            String name = mapping.name();
+            int index = mapping.index();
             Long value = (Long) field.get(parameters);
-            statement.setLong(name, value);
+            statement.setLong(index, value);
         }
 
         @Override
         public void bindOutParameter(OracleCallableStatement statement, Object parameters, Field field, OracleParameterMapping mapping) throws Exception {
-            String name = mapping.name();
-            Long value = statement.getLong(name);
+            int index = mapping.index();
+            Long value = statement.getLong(index);
             field.set(parameters, value);
         }
     }
@@ -309,15 +309,15 @@ public class OracleParameterUtils {
 
         @Override
         public void registerInputParameter(Object parameters, Field field, OracleParameterMapping mapping, OracleCallableStatement statement) throws Exception {
-            String name = mapping.name();
+            int index = mapping.index();
             Float value = (Float) field.get(parameters);
-            statement.setFloat(name, value);
+            statement.setFloat(index, value);
         }
 
         @Override
         public void bindOutParameter(OracleCallableStatement statement, Object parameters, Field field, OracleParameterMapping mapping) throws Exception {
-            String name = mapping.name();
-            Float value = statement.getFloat(name);
+            int index = mapping.index();
+            Float value = statement.getFloat(index);
             field.set(parameters, value);
         }
     }
@@ -326,15 +326,15 @@ public class OracleParameterUtils {
 
         @Override
         public void registerInputParameter(Object parameters, Field field, OracleParameterMapping mapping, OracleCallableStatement statement) throws Exception {
-            String name = mapping.name();
+            int index = mapping.index();
             Double value = (Double) field.get(parameters);
-            statement.setDouble(name, value);
+            statement.setDouble(index, value);
         }
 
         @Override
         public void bindOutParameter(OracleCallableStatement statement, Object parameters, Field field, OracleParameterMapping mapping) throws Exception {
-            String name = mapping.name();
-            Double value = statement.getDouble(name);
+            int index = mapping.index();
+            Double value = statement.getDouble(index);
             field.set(parameters, value);
         }
     }
@@ -343,15 +343,15 @@ public class OracleParameterUtils {
 
         @Override
         public void registerInputParameter(Object parameters, Field field, OracleParameterMapping mapping, OracleCallableStatement statement) throws Exception {
-            String name = mapping.name();
+            int index = mapping.index();
             byte[] value = (byte[]) field.get(parameters);
-            statement.setBytes(name, value);
+            statement.setBytes(index, value);
         }
 
         @Override
         public void bindOutParameter(OracleCallableStatement statement, Object parameters, Field field, OracleParameterMapping mapping) throws Exception {
-            String name = mapping.name();
-            byte[] value = statement.getBytes(name);
+            int index = mapping.index();
+            byte[] value = statement.getBytes(index);
             field.set(parameters, value);
         }
     }
@@ -360,15 +360,15 @@ public class OracleParameterUtils {
 
         @Override
         public void registerInputParameter(Object parameters, Field field, OracleParameterMapping mapping, OracleCallableStatement statement) throws Exception {
-            String name = mapping.name();
+            int index = mapping.index();
             Date value = (Date) field.get(parameters);
-            statement.setDate(name, value);
+            statement.setDate(index, value);
         }
 
         @Override
         public void bindOutParameter(OracleCallableStatement statement, Object parameters, Field field, OracleParameterMapping mapping) throws Exception {
-            String name = mapping.name();
-            Date value = statement.getDate(name);
+            int index = mapping.index();
+            Date value = statement.getDate(index);
             field.set(parameters, value);
         }
     }
@@ -377,15 +377,15 @@ public class OracleParameterUtils {
 
         @Override
         public void registerInputParameter(Object parameters, Field field, OracleParameterMapping mapping, OracleCallableStatement statement) throws Exception {
-            String name = mapping.name();
+            int index = mapping.index();
             Time value = (Time) field.get(parameters);
-            statement.setTime(name, value);
+            statement.setTime(index, value);
         }
 
         @Override
         public void bindOutParameter(OracleCallableStatement statement, Object parameters, Field field, OracleParameterMapping mapping) throws Exception {
-            String name = mapping.name();
-            Time value = statement.getTime(name);
+            int index = mapping.index();
+            Time value = statement.getTime(index);
             field.set(parameters, value);
         }
     }
@@ -394,15 +394,15 @@ public class OracleParameterUtils {
 
         @Override
         public void registerInputParameter(Object parameters, Field field, OracleParameterMapping mapping, OracleCallableStatement statement) throws Exception {
-            String name = mapping.name();
+            int index = mapping.index();
             Timestamp value = (Timestamp) field.get(parameters);
-            statement.setTimestamp(name, value);
+            statement.setTimestamp(index, value);
         }
 
         @Override
         public void bindOutParameter(OracleCallableStatement statement, Object parameters, Field field, OracleParameterMapping mapping) throws Exception {
-            String name = mapping.name();
-            Timestamp value = statement.getTimestamp(name);
+            int index = mapping.index();
+            Timestamp value = statement.getTimestamp(index);
             field.set(parameters, value);
         }
     }
@@ -411,17 +411,17 @@ public class OracleParameterUtils {
 
         @Override
         public void registerInputParameter(Object parameters, Field field, OracleParameterMapping mapping, OracleCallableStatement statement) throws Exception {
-            String name = mapping.name();
+            int index = mapping.index();
             byte[] bytes = (byte[]) field.get(parameters);
             Blob value = statement.getConnection().createBlob();
             value.setBytes(1, bytes);
-            statement.setBlob(name, value);
+            statement.setBlob(index, value);
         }
 
         @Override
         public void bindOutParameter(OracleCallableStatement statement, Object parameters, Field field, OracleParameterMapping mapping) throws Exception {
-            String name = mapping.name();
-            Blob blob = statement.getBlob(name);
+            int index = mapping.index();
+            Blob blob = statement.getBlob(index);
             byte[] value = blob.getBytes(1, (int) blob.length());
             field.set(parameters, value);
         }
@@ -431,17 +431,17 @@ public class OracleParameterUtils {
 
         @Override
         public void registerInputParameter(Object parameters, Field field, OracleParameterMapping mapping, OracleCallableStatement statement) throws Exception {
-            String name = mapping.name();
+            int index = mapping.index();
             String stringValue = (String) field.get(parameters);
             Clob value = statement.getConnection().createClob();
             value.setString(1, stringValue);
-            statement.setClob(name, value);
+            statement.setClob(index, value);
         }
 
         @Override
         public void bindOutParameter(OracleCallableStatement statement, Object parameters, Field field, OracleParameterMapping mapping) throws Exception {
-            String name = mapping.name();
-            Clob clob = statement.getClob(name);
+            int index = mapping.index();
+            Clob clob = statement.getClob(index);
             Reader reader = clob.getCharacterStream();
             StringWriter writer = new StringWriter();
             IOUtils.copy(reader, writer);
@@ -454,15 +454,15 @@ public class OracleParameterUtils {
 
         @Override
         public void registerInputParameter(Object parameters, Field field, OracleParameterMapping mapping, OracleCallableStatement statement) throws Exception {
-            String name = mapping.name();
+            int index = mapping.index();
             Object value = field.get(parameters);
-            statement.setObject(name, value);
+            statement.setObject(index, value);
         }
 
         @Override
         public void bindOutParameter(OracleCallableStatement statement, Object parameters, Field field, OracleParameterMapping mapping) throws Exception {
-            String name = mapping.name();
-            Object value = statement.getObject(name);
+            int index = mapping.index();
+            Object value = statement.getObject(index);
             field.set(parameters, value);
         }
     }
