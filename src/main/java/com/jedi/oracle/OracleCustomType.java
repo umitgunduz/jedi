@@ -57,15 +57,16 @@ public abstract class OracleCustomType implements SQLData, CustomType {
         for (Field field : ordering) {
             int oracleType = field.getAnnotation(OracleObjectMapping.class).oracleType();
             Object value = OracleTypeUtils.getValue(stream, oracleType);
-            if (!field.getType().isInstance(value)) {
-                try {
-                    value = SqlTypeConverter.convert(value, field.getType());
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-
             if (value != null) {
+                if (!field.getType().isInstance(value)) {
+                    try {
+                        value = SqlTypeConverter.convert(value, field.getType());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+
                 try {
                     field.setAccessible(true);
                     field.set(this, value);

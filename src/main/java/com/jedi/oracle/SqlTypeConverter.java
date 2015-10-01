@@ -23,6 +23,7 @@ import org.apache.commons.io.IOUtils;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringWriter;
+import java.math.BigDecimal;
 import java.sql.Blob;
 import java.sql.Clob;
 import java.sql.SQLException;
@@ -45,12 +46,15 @@ public class SqlTypeConverter {
 
     private class SqlTypeConverterFactory {
         ISqlTypeConverter getConverter(Class<?> from, Class<?> to) {
-            if (from.isAssignableFrom(Blob.class) && to.isAssignableFrom(String.class)) {
+            if (Blob.class.isAssignableFrom(from) && String.class.isAssignableFrom(to)) {
                 return new SqlBlobToStringConverter();
-            } else if (from.isAssignableFrom(Blob.class) && to.isAssignableFrom(byte[].class)) {
+            } else if (Blob.class.isAssignableFrom(from) && byte[].class.isAssignableFrom(to)) {
                 return new SqlBlobToByteArrayConverter();
-            } else if (from.isAssignableFrom(Clob.class) && to.isAssignableFrom(String.class)) {
+            } else if (Clob.class.isAssignableFrom(from) && String.class.isAssignableFrom(to)) {
                 return new SqlClobToStringConverter();
+            } else if (BigDecimal.class.isAssignableFrom(from) && (int.class.isAssignableFrom(to) || Integer.class.isAssignableFrom(to))) {
+                return new BigDecimalToIntegerConverter();
+
             } else {
                 throw new UnsupportedOperationException(from.getName() + " " + to.getName() + " transformation is not supported");
             }
@@ -88,6 +92,14 @@ public class SqlTypeConverter {
             StringWriter writer = new StringWriter();
             IOUtils.copy(reader, writer);
             return writer.toString();
+        }
+    }
+
+    private class BigDecimalToIntegerConverter implements ISqlTypeConverter<BigDecimal, Integer> {
+
+        @Override
+        public Integer convert(BigDecimal bigDecimal) throws SQLException, IOException {
+            return bigDecimal.intValueExact();
         }
     }
 
